@@ -1,6 +1,7 @@
 scratch.txt
-__pycache__
 env
-.vscode/
 scratch.*
-
+.coveragerc
+.vscode/
+__pycache__
+htmlcov/
