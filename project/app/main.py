@@ -8,14 +8,15 @@ from fastapi import FastAPI
 from app.api import ping, summaries  # updated
 from app.db import init_db
 
-
 log = logging.getLogger("uvicorn")
 
 
 def create_application() -> FastAPI:
     application = FastAPI()
     application.include_router(ping.router)
-    application.include_router(summaries.router, prefix="/summaries", tags=["summaries"])  # new
+    application.include_router(
+        summaries.router, prefix="/summaries", tags=["summaries"]
+    )
 
     return application
 
@@ -29,9 +30,6 @@ async def startup_event():
     init_db(app)
 
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    log.info("Shutting down...")
 @app.on_event("shutdown")
 async def shutdown_event():
     log.info("Shutting down...")
