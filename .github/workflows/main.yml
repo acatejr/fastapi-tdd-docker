@@ -74,7 +74,7 @@ jobs:
       needs: [build, test]
       env:
         HEROKU_APP_NAME: vast-journey-14924
-        HEROKU_REGISTRY_IMAGE: registry.heroku.com/${vast-journey-14924}/summarizer
+        HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/summarizer
       steps:
         - name: Checkout master
           uses: actions/checkout@v2.3.4
