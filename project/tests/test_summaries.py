@@ -2,8 +2,8 @@
 import json
 
 import pytest
-from app.api import summaries
 
+from app.api import summaries
 
 # def test_create_summary(test_app_with_db):
 #     response = test_app_with_db.post(
