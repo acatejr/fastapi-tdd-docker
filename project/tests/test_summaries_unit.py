@@ -3,7 +3,6 @@
 
 import json
 from datetime import datetime
-from app.api import summaries
 
 import pytest
 
