@@ -3,28 +3,42 @@
 
 import json
 from datetime import datetime
+from app.api import summaries
 
 import pytest
 
-from app.api import crud
+from app.api import crud, summaries
+
+# def test_create_summary(test_app, monkeypatch):
+#     test_request_payload = {"url": "https://foo.bar"}
+#     test_response_payload = {"id": 1, "url": "https://foo.bar"}
+
+#     async def mock_post(payload):
+#         return 1
+
+#     monkeypatch.setattr(crud, "post", mock_post)
+
+#     response = test_app.post(
+#         "/summaries/",
+#         data=json.dumps(test_request_payload),
+#     )
+
+#     assert response.status_code == 201
+#     assert response.json() == test_response_payload
 
 
-def test_create_summary(test_app, monkeypatch):
-    test_request_payload = {"url": "https://foo.bar"}
-    test_response_payload = {"id": 1, "url": "https://foo.bar"}
+def test_create_summary(test_app_with_db, monkeypatch):
+    def mock_generate_summary(summary_id, url):
+        return None
 
-    async def mock_post(payload):
-        return 1
+    monkeypatch.setattr(summaries, "generate_summary", mock_generate_summary)
 
-    monkeypatch.setattr(crud, "post", mock_post)
-
-    response = test_app.post(
-        "/summaries/",
-        data=json.dumps(test_request_payload),
+    response = test_app_with_db.post(
+        "/summaries/", data=json.dumps({"url": "https://foo.bar"})
     )
 
     assert response.status_code == 201
-    assert response.json() == test_response_payload
+    assert response.json()["url"] == "https://foo.bar"
 
 
 def test_create_summaries_invalid_json(test_app):
@@ -40,7 +54,9 @@ def test_create_summaries_invalid_json(test_app):
         ]
     }
 
-    response = test_app.post("/summaries/", data=json.dumps({"url": "invalid://url"}))  # noqa: E501
+    response = test_app.post(
+        "/summaries/", data=json.dumps({"url": "invalid://url"})
+    )  # noqa: E501
     assert response.status_code == 422
     assert response.json()["detail"][0]["msg"] == "URL scheme not permitted"
 
@@ -215,7 +231,9 @@ def test_update_summary_invalid(
 
     monkeypatch.setattr(crud, "put", mock_put)
 
-    response = test_app.put(f"/summaries/{summary_id}/", data=json.dumps(payload))  # noqa: E501
+    response = test_app.put(
+        f"/summaries/{summary_id}/", data=json.dumps(payload)
+    )  # noqa: E501
     assert response.status_code == status_code
     assert response.json()["detail"] == detail
 
