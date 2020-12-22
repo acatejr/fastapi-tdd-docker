@@ -13,6 +13,7 @@ from app.api import summaries
 #     assert response.status_code == 201
 #     assert response.json()["url"] == "https://foo.bar"
 
+
 def test_create_summary(test_app_with_db, monkeypatch):
     def mock_generate_summary(summary_id, url):
         return None
